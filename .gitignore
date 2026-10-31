@@ -1,0 +1,17 @@
+# dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
+
+# local runtime state (synthetic demo data only, never tracked)
+.runtime/
+
+# logs and coverage
+*.log
+logs/
+coverage/
+
+# local environment (only .env.example is tracked)
+.env
+.env.*
+!.env.example
