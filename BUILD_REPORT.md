@@ -2,8 +2,9 @@
 
 - **Date:** 2026-10-31
 - **Project path:** `C:\Users\camer\github\improvement-plan\durable-integration-worker-ts`
-- **Status:** a tested local reference implementation, built and validated locally. It has no Git
-  repository, no commits, no remote and no deployment.
+- **Status:** a tested local reference implementation, built and validated locally, then published as
+  an initial commit on `main` at `https://github.com/cameraphp/durable-integration-worker-ts`. One
+  GitHub Actions verification run for that commit succeeded (see §6 and §9). No deployment.
 
 ## 1. Environment
 
@@ -49,8 +50,10 @@ The source is 2,993 lines across `src/`, `tests/` and `scripts/`.
 | `tests/` | `unit/domain.test.ts`, `integration/{api,journal,worker,replay,logging}.test.ts`, `support/harness.ts` |
 | `scripts/` | `safety-check.mjs`, `smoke.mjs` |
 
-Generated or local-only folders, all Git-ignored and none of them deliverables: `node_modules/`,
-`dist/`. These are absent: `.runtime/`, `.env`, `coverage/`, logs and `.git`.
+Generated or local-only folders, none of them deliverables:
+- `node_modules/` and `dist/` exist locally and are Git-ignored.
+- `.git/` is local Git metadata. It is not a deliverable.
+- `.runtime/`, `.env`, `coverage/` and logs were absent when this report was written.
 
 ## 4. Architecture and durability choices
 
@@ -155,12 +158,19 @@ All 14 required test scenarios are covered:
 - torn-tail handling;
 - the safe job view.
 
-**Not run:** `.github/workflows/ci.yml` was created locally but never triggered, because no GitHub
-repository exists. Validation item CI-01 was checked by reviewing the file:
+**CI verification after publication:** `.github/workflows/ci.yml` was first reviewed locally (CI-01):
 - push and PR triggers;
 - `permissions: contents: read`;
 - runs `npm ci`, typecheck, lint, `check:safety`, test and build;
 - no secrets, publishing or deployment.
+
+GitHub Actions then ran once after the initial push:
+- **Commit:** `5c1985b2f374f1ad972359758330c9a85283ae67`
+- **Run:** https://github.com/cameraphp/durable-integration-worker-ts/actions/runs/41253716593
+- **Result:** completed successfully.
+- **Steps:** the `verify` job ran checkout, setup-node, `npm ci`, typecheck, lint, `check:safety`, tests and build. Every step succeeded.
+
+This records one observed successful run for that commit. It is not a promise that later commits will pass CI.
 
 ## 7. Local demo (smoke) result
 
@@ -189,9 +199,11 @@ Full detail is in [`docs/limitations.md`](docs/limitations.md).
 - **Not claimed:** production readiness, exactly-once delivery, zero data loss, or any compliance or certification.
 - **License:** none chosen yet; that's the owner's decision.
 
-## 9. Actions not taken
+## 9. Actions taken and not taken
 
-I confirm that this task did **not**:
+### Initial local build actions not taken (Phase 4A)
+
+The Phase 4A build itself did **not**:
 - create a GitHub repository or use `gh`;
 - run `git init`, commit, push or configure a remote;
 - modify any existing repository or earlier audit folder;
@@ -201,4 +213,29 @@ I confirm that this task did **not**:
 - make any third-party integration or outbound application network call;
 - record or commit a video.
 
-All files were created only inside the project directory.
+All Phase 4A files were created only inside the project directory.
+
+### Subsequent publication record (Phase 4B)
+
+With owner approval, Phase 4B later:
+- initialized the local Git repository on `main`;
+- made one normal commit, `5c1985b2f374f1ad972359758330c9a85283ae67`
+  (`feat: add durable integration worker reference`);
+- pushed `main` once to `origin` (`https://github.com/cameraphp/durable-integration-worker-ts.git`);
+- observed one successful GitHub Actions run:
+  https://github.com/cameraphp/durable-integration-worker-ts/actions/runs/41253716593.
+
+Before that commit, line endings in three files (`src/api/app.ts`, `src/config.ts`,
+`tests/support/harness.ts`) were changed from CRLF to LF, and a trailing blank line was removed from
+`src/worker/worker.ts`. These were whitespace-only changes, made with owner approval after
+`git diff --cached --check` flagged them. The full validation sequence in §6 was then re-run and passed.
+
+The following did **not** happen: a force push, release, deployment, package publication, license
+selection, video, or any GitHub settings change.
+
+## 10. Report freshness
+
+This report is accurate through the initial publication and CI observation. Its verifiable anchors
+are commit `5c1985b2f374f1ad972359758330c9a85283ae67` and Actions run
+https://github.com/cameraphp/durable-integration-worker-ts/actions/runs/41253716593. Later commits,
+including the one that updates this report, aren't covered by the evidence above.
